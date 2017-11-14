@@ -29,12 +29,7 @@ def make_quandrants(m, b, fp):
 
     ############################
     x = np.linspace(xmin, xmax, 500)
-    slope = float(Fraction(m))
-
-    if len(sys.argv) > 2:
-        b = float(Fraction(b))
-    else:
-        b = 0.0
+    slope = m
     gt = ymax
     lt = ymin
     space = lt
