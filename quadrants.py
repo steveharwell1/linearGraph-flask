@@ -122,19 +122,8 @@ def make_quandrants(m, b, fp):
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
 
-    # ax.xaxis.set_ticks([-9, -8, -7, -6,
-    #                     -5, -4, -3, -2, -1,
-    #                     1, 2, 3, 4, 5,
-    #                     6, 7, 8, 9])
-    # ax.yaxis.set_ticks([-9, -8, -7, -6,
-    #                     -5, -4, -3, -2, -1,
-    #                     1, 2, 3, 4, 5,
-    #                     6, 7, 8, 9])
-
-    ax.xaxis.set_ticks([-5, -4, -3, -2, -1,
-                        1, 2, 3, 4, 5])
-    ax.yaxis.set_ticks([-5, -4, -3, -2, -1,
-                        1, 2, 3, 4, 5])
+    ax.xaxis.set_ticks([x for x in range(xmin +1, xmax) if x != 0])
+    ax.yaxis.set_ticks([y for y in range(ymin +1, ymax) if y != 0])
 
     adjust_spines(ax, ["left", "bottom"])
     ax.xaxis.grid(color='k', lw=1.2, zorder=10)
