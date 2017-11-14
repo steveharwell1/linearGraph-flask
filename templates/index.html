@@ -1,0 +1,12 @@
+
+<!doctype html>
+{% if image %}
+<img src="/get_image?image={{ image }}"></img>
+{% else %}
+<h1>Hello, World!</h1>
+{% endif %}
+<form method="get">
+<input name="m">
+<input name="b">
+<input type="submit">
+</form>
