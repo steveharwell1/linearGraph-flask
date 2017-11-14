@@ -5,30 +5,28 @@ from flask import render_template
 app = Flask(__name__)
 
 import io
-import numpy as np
-import matplotlib.pyplot as plt
+import quadrants
 from fractions import Fraction
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def hello():
-    m = float(Fraction(request.args.get("m", default=1)))
-    b = float(Fraction(request.args.get("b", default=0)))
-    path = "api/v1/graph/{}/{}".format(m, b)
+    m = request.args.get("m", default=1)
+    b = request.args.get("b", default=0)
+    path = "api/v1/linear/graph/{}/{}".format(m, b)
     return render_template("index.html", image=path)
 
-@app.route('/api/v1/graph/<float:m>/<float:b>')
+@app.route('/api/v1/linear/graph/<m>/<b>')
 def get_image(m, b):
+    try:
+        m = float(Fraction(m))
+    except(ValueError):
+        m = 1
+    try:
+        b = float(Fraction(b))
+    except(ValueError):
+        b = 0.0
     f = io.BytesIO()
-    graph(m, b, f)
+    quadrants.make_quandrants(m, b, f)
     f.seek(0)
     return send_file(f, mimetype='image/png')
-
-def graph(m, b, fp):
-    plt.clf()
-    x = np.linspace(-10, 10, num=500)
-    plt.plot(x, m*x + b)
-    plt.ylabel("{}x+{}".format(m, b))
-    
-    plt.savefig(fp)
-    return fp
