@@ -11,8 +11,8 @@ from fractions import Fraction
 
 @app.route("/", methods=["GET", "POST"])
 def hello():
-    m = request.args.get("m", default=1)
-    b = request.args.get("b", default=0)
+    m = float(Fraction(request.args.get("m", default=1)))
+    b = float(Fraction(request.args.get("b", default=0)))
     path = "api/v1/linear/graph/{}/{}".format(m, b)
     return render_template("index.html", image=path)
 
