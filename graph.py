@@ -11,19 +11,26 @@ from fractions import Fraction
 
 @app.route("/", methods=["GET", "POST"])
 def hello():
-    m = float(Fraction(request.args.get("m", default=1)))
-    b = float(Fraction(request.args.get("b", default=0)))
+    try:
+        m = float(Fraction(request.args.get("m", default=1)))
+    except(ValueError):
+        m = 1.0
+    try:
+        b = float(Fraction(request.args.get("b", default=0)))
+    except(ValueError):
+        b = 0.0
+    
     path = "api/v1/linear/graph/{}/{}".format(m, b)
     return render_template("index.html", image=path)
 
 @app.route('/api/v1/linear/graph/<m>/<b>')
 def get_image(m, b):
     try:
-        m = float(Fraction(m))
+        m = float(m)
     except(ValueError):
         m = 1
     try:
-        b = float(Fraction(b))
+        b = float(b)
     except(ValueError):
         b = 0.0
     f = io.BytesIO()
