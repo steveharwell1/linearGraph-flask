@@ -132,6 +132,7 @@ def make_quandrants(m, b, fp):
     ax.yaxis.set_ticks_position('left')
     adjust_labels(ax.get_xticklabels())
     adjust_labels(ax.get_yticklabels())
+    plt.tight_layout()
     fig.savefig(fp, format="png")
     #plt.show()
 
