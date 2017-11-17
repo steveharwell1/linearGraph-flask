@@ -9,7 +9,7 @@ import quadrants
 from fractions import Fraction
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def hello():
     try:
         m = float(Fraction(request.args.get("m", default=1)))
@@ -19,9 +19,14 @@ def hello():
         b = float(Fraction(request.args.get("b", default=0)))
     except(ValueError):
         b = 0.0
-    
-    path = "api/v1/linear/graph/{}/{}".format(m, b)
-    return render_template("index.html", image=path)
+
+    paths = list()
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(m, b), "m": "{:.2}".format(m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(-m, b), "m": "{:.2}".format(-m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(1/m, b), "m": "{:.2}".format(1/m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(-1/m, b), "m": "{:.2}".format(-1/m), "b": b})
+
+    return render_template("index.html", paths=paths)
 
 @app.route('/api/v1/linear/graph/<m>/<b>')
 def get_image(m, b):
