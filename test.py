@@ -1,8 +1,6 @@
-import os
 import io
 import graph
 import unittest
-import tempfile
 
 
 class graphTestCase(unittest.TestCase):
