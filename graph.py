@@ -10,7 +10,7 @@ from fractions import Fraction
 
 
 @app.route("/", methods=["GET"])
-def hello():
+def index():
     try:
         m = float(Fraction(request.args.get("m", default=1)))
     except(ValueError):
