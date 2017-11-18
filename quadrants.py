@@ -138,4 +138,14 @@ def make_quandrants(m, b, fp):
 
 if __name__ == "__main__":
     import sys
-    make_quandrants(sys.argv[1], sys.argv[2], "img.png")
+
+    try:
+        m = float(Fraction(sys.argv[1]))
+    except(ValueError):
+        m = 1.0
+    try:
+        b = float(Fraction(sys.argv[2]))
+    except(ValueError):
+        b = 0.0
+
+    make_quandrants(m, b, "img/img.png")
