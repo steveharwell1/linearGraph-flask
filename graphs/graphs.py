@@ -1,13 +1,29 @@
-from flask import Flask
-from flask import send_file
-from flask import request
-from flask import render_template
+import os
+import sqlite3
+from flask import Flask, request, session, g, redirect, url_for, abort, \
+render_template, flash, send_file
 app = Flask(__name__)
+app.config.from_object(__name__)
+
+app.config.update(dict(
+    DATABASE=os.path.join(app.root_path, 'graph.db'),
+    SECRET_KEY='development key',
+    USERNAME='admin',
+    PASSWORD='default'
+))
+
+app.config.from_envvar('GRAPH_SETTINGS', silent=True)
 
 import io
-import quadrants
+import graphs.quadrants as quadrants
 from fractions import Fraction
 
+
+def connect_db():
+    """Connects to the specific database"""
+    rv = sqlit3.connect(app.config['DATABASE'])
+    rv.row_factory = sqlite3.Row
+    return rv
 
 @app.route("/", methods=["GET"])
 def index():

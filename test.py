@@ -1,5 +1,5 @@
 import io
-import graph
+import graphs as graph
 import unittest
 
 
@@ -23,7 +23,7 @@ class graphTestCase(unittest.TestCase):
         self.assertIn(b"<!DOCTYPE html>", response.data)
 
     def test_image_path(self):
-        with open(self.dir + '/img/img.png', 'rb') as img1:
+        with open(self.dir + '/graphs/img/img.png', 'rb') as img1:
             imgByteIO = io.BytesIO(img1.read())
 
         response = self.app.get("/api/v1/linear/graph/3.0/2.0")
