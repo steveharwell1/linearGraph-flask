@@ -49,14 +49,20 @@
             <div class="col-lg-4 text-center">
                 {% endif %}
                 <h3>{{ path.m }}x + {{ path.b }}</h3><hr>
-                <img src="{{ path.path }}"></img>
+
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#qrcode{{ loop.index }}">QR code</button>
+                <div id="qrcode{{ loop.index }}" class="collapse">
+                    <img src="{{ qrcodes[ loop.index - 1]}}" />
+                </div>
+
+                <img src="{{ path.path }}" />
             </div>
                 {% if loop.index is divisibleby 2 %}
         </div>
                 {% endif %} 
             {% endfor %}
     </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     
   </body>

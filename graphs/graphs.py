@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-render_template, flash, send_file
+    render_template, flash, send_file
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -17,6 +17,7 @@ app.config.from_envvar('GRAPH_SETTINGS', silent=True)
 import io
 import graphs.quadrants as quadrants
 from fractions import Fraction
+import qrcode
 
 
 def connect_db():
@@ -24,6 +25,7 @@ def connect_db():
     rv = sqlit3.connect(app.config['DATABASE'])
     rv.row_factory = sqlite3.Row
     return rv
+
 
 @app.route("/", methods=["GET"])
 def index():
@@ -37,12 +39,24 @@ def index():
         b = 0.0
 
     paths = list()
-    paths.append({"path": "api/v1/linear/graph/{}/{}".format(m, b), "m": "{:.2}".format(m), "b": b})
-    paths.append({"path": "api/v1/linear/graph/{}/{}".format(-m, b), "m": "{:.2}".format(-m), "b": b})
-    paths.append({"path": "api/v1/linear/graph/{}/{}".format(1/m, b), "m": "{:.2}".format(1/m), "b": b})
-    paths.append({"path": "api/v1/linear/graph/{}/{}".format(-1/m, b), "m": "{:.2}".format(-1/m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(m, b),
+                    "m": "{:.2}".format(m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(-m, b),
+                    "m": "{:.2}".format(-m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(1 / m, b),
+                    "m": "{:.2}".format(1 / m), "b": b})
+    paths.append({"path": "api/v1/linear/graph/{}/{}".format(-1 / m, b),
+                    "m": "{:.2}".format(-1 / m), "b": b})
 
-    return render_template("index.html", paths=paths)
+    qrcodes = [
+        "api/v1/linear/qrcode/{}/{}".format(m, b),
+        "api/v1/linear/qrcode/{}/{}".format(-m, b),
+        "api/v1/linear/qrcode/{}/{}".format(1 / m, b),
+        "api/v1/linear/qrcode/{}/{}".format(-1 / m, b)
+    ]
+
+    return render_template("index.html", paths=paths, qrcodes=qrcodes)
+
 
 @app.route('/api/v1/linear/graph/<m>/<b>')
 def get_image(m, b):
@@ -58,3 +72,27 @@ def get_image(m, b):
     quadrants.make_quandrants(m, b, f)
     f.seek(0)
     return send_file(f, mimetype='image/png')
+
+
+@app.route('/api/v1/linear/qrcode/<m>/<b>')
+def get_qrcode(m, b):
+    try:
+        m = float(m)
+    except(ValueError):
+        m = 1
+    try:
+        b = float(b)
+    except(ValueError):
+        b = 0.0
+
+    f = io.BytesIO()
+    sitename = "http://192.168.0.13:5000"
+    path = "{}/api/v1/linear/graph/{}/{}".format(sitename, m, b)
+    make_qrcode(path, f)
+    f.seek(0)
+    return send_file(f, mimetype='image/png')
+
+
+def make_qrcode(path, fp):
+    img = qrcode.make(path)
+    img.save(fp)
