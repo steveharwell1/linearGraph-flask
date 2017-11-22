@@ -15,7 +15,7 @@ app.config.update(dict(
 app.config.from_envvar('GRAPH_SETTINGS', silent=True)
 
 import io
-import graphs.quadrants as quadrants
+import quadrants
 from fractions import Fraction
 import qrcode
 
@@ -96,3 +96,5 @@ def get_qrcode(m, b):
 def make_qrcode(path, fp):
     img = qrcode.make(path)
     img.save(fp)
+
+print(__name__)
