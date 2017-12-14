@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import requests
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash, send_file
 app = Flask(__name__)
@@ -94,7 +95,10 @@ def get_qrcode(m, b):
 
 
 def make_qrcode(path, fp):
+    path = make_tinyurl(path)
     img = qrcode.make(path)
     img.save(fp)
 
-print(__name__)
+def make_tinyurl(path):
+    response = requests.get("http://www.tinyurl.com/api-create.php", params={"url": path})
+    return response.content
